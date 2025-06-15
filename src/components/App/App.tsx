@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { QueryFunctionContext } from "@tanstack/react-query";
 import ReactPaginate from "react-paginate";
 import toast from "react-hot-toast";
 
@@ -20,11 +19,8 @@ export default function App() {
 
   const { data, isLoading, isError } = useQuery<MoviesResponse, Error>({
     queryKey: ["movies", query, page],
-    queryFn: ({ queryKey }: QueryFunctionContext) => {
-      const [_key, q, p] = queryKey;
-      return fetchMovies(q as string, p as number);
-    },
-    enabled: !!query,
+    queryFn: () => fetchMovies(query, page),
+    enabled: query.length > 0,
     keepPreviousData: true,
   });
 
