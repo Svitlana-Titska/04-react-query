@@ -35,7 +35,7 @@ export default function SearchBar({ onSubmit }: SearchBarProps) {
           Powered by TMDB
         </a>
 
-        {/* Toaster між написом і формою */}
+        {}
         <Toaster
           containerClassName={styles.toastContainer}
           position="top-center"

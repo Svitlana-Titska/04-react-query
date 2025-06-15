@@ -6,8 +6,6 @@ import ErrorBoundary from "./components/ErrorBoundary/ErrorBoundary";
 
 import "modern-normalize/modern-normalize.css";
 
-// Увага: <Toaster /> видалено звідси, бо тепер він у SearchBar
-
 const queryClient = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(

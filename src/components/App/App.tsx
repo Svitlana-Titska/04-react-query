@@ -9,7 +9,7 @@ import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 import { fetchMovies } from "../../services/movieService";
-import type { Movie } from "../../types/movie";
+import type { Movie, MoviesResponse } from "../../types/movie";
 
 import css from "./App.module.css";
 
@@ -17,7 +17,7 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError } = useQuery<MoviesResponse>({
     queryKey: ["movies", query, page],
     queryFn: () => fetchMovies(query, page),
     enabled: !!query,

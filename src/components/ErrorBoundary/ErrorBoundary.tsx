@@ -1,10 +1,11 @@
-import React, { ErrorInfo } from "react";
+import React, { Component } from "react";
+import type { ErrorInfo } from "react";
 
 interface State {
   hasError: boolean;
 }
 
-export default class ErrorBoundary extends React.Component<
+export default class ErrorBoundary extends Component<
   React.PropsWithChildren<{}>,
   State
 > {
@@ -14,8 +15,6 @@ export default class ErrorBoundary extends React.Component<
   }
 
   static getDerivedStateFromError(_: Error) {
-    // Просто оновлюємо стан, щоб React знав про помилку,
-    // але ми не показуємо fallback UI
     return { hasError: true };
   }
 
@@ -24,11 +23,8 @@ export default class ErrorBoundary extends React.Component<
   }
 
   render() {
-    // Якщо є помилка — рендеримо дітей без змін, або можна null
     if (this.state.hasError) {
-      return this.props.children;
-      // або null, якщо хочеш приховати UI при помилці
-      // return null;
+      return <h2>Something went wrong. Please try refreshing the page.</h2>;
     }
 
     return this.props.children;
