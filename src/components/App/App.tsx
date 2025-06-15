@@ -18,7 +18,7 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
 
-  const { data, isLoading, isError } = useQuery<MoviesResponse>({
+  const { data, isLoading, isError } = useQuery<MoviesResponse, Error>({
     queryKey: ["movies", query, page],
     queryFn: ({ queryKey }: QueryFunctionContext) => {
       const [_key, q, p] = queryKey;
