@@ -20,7 +20,7 @@ export default function App() {
   const { data, isLoading, isError } = useQuery<MoviesResponse, Error>({
     queryKey: ["movies", query, page],
     queryFn: () => fetchMovies(query, page),
-    enabled: query.length > 0,
+    enabled: Boolean(query),
     keepPreviousData: true,
   });
 
