@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useQuery, QueryFunctionContext } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
+import type { QueryFunctionContext } from "@tanstack/react-query";
 import ReactPaginate from "react-paginate";
 import toast from "react-hot-toast";
 
@@ -17,8 +18,7 @@ export default function App() {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
 
-  // Правильна типізація useQuery з QueryFunctionContext
-  const { data, isLoading, isError } = useQuery<MoviesResponse, Error>({
+  const { data, isLoading, isError } = useQuery<MoviesResponse>({
     queryKey: ["movies", query, page],
     queryFn: ({ queryKey }: QueryFunctionContext) => {
       const [_key, q, p] = queryKey;
