@@ -21,11 +21,12 @@ export default function App() {
     queryKey: ["movies", query, page],
     queryFn: () => fetchMovies(query, page),
     enabled: query.length > 0,
-    keepPreviousData: true,
+    staleTime: 5000, // 5 секунд
+    cacheTime: 300000, // 5 хвилин
   });
 
-  const movies: Movie[] = (data as MoviesResponse)?.results ?? [];
-  const totalPages: number = (data as MoviesResponse)?.total_pages ?? 0;
+  const movies: Movie[] = data?.results ?? [];
+  const totalPages: number = data?.total_pages ?? 0;
 
   useEffect(() => {
     if (data && !isLoading && !isError && movies.length === 0 && query) {
