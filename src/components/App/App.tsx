@@ -24,8 +24,8 @@ export default function App() {
     keepPreviousData: true,
   });
 
-  const movies: Movie[] = (data as MoviesResponse)?.results ?? [];
-  const totalPages: number = (data as MoviesResponse)?.total_pages ?? 0;
+  const movies: Movie[] = data?.results ?? [];
+  const totalPages: number = data?.total_pages ?? 0;
 
   useEffect(() => {
     if (data && !isLoading && !isError && movies.length === 0 && query) {
