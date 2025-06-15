@@ -21,8 +21,6 @@ export default function App() {
     queryKey: ["movies", query, page],
     queryFn: () => fetchMovies(query, page),
     enabled: query.length > 0,
-    staleTime: 5000, // 5 секунд
-    cacheTime: 300000, // 5 хвилин
   });
 
   const movies: Movie[] = data?.results ?? [];
