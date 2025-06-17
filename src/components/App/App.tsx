@@ -25,7 +25,7 @@ export default function App() {
     queryFn: () => fetchMovies(query, page),
     enabled: query.length > 0,
     staleTime: 5000,
-    placeholderData: (keepPreviousData) => keepPreviousData,
+    keepPreviousData: true,
   });
 
   const movies = data?.results ?? [];
