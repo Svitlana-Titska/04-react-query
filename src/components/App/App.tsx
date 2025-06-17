@@ -10,7 +10,8 @@ import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 import { fetchMovies } from "../../services/movieService";
-import type { Movie, MoviesResponse } from "../../types/movie";
+import type { Movie } from "../../types/movie";
+import type { MoviesResponse } from "../../types/movies-response";
 
 import css from "./App.module.css";
 
@@ -23,10 +24,12 @@ export default function App() {
     queryKey: ["movies", query, page],
     queryFn: () => fetchMovies(query, page),
     enabled: query.length > 0,
+    staleTime: 5000,
+    placeholderData: (keepPreviousData) => keepPreviousData,
   });
 
-  const movies: Movie[] = data?.results ?? [];
-  const totalPages: number = data?.total_pages ?? 0;
+  const movies = data?.results ?? [];
+  const totalPages = data?.total_pages ?? 0;
 
   useEffect(() => {
     if (data && !isLoading && !isError && movies.length === 0 && query) {
@@ -34,8 +37,7 @@ export default function App() {
     }
   }, [data, isLoading, isError, movies.length, query]);
 
-  const handleSearch = (formData: FormData) => {
-    const newQuery = formData.get("query")?.toString().trim() ?? "";
+  const handleSearch = (newQuery: string) => {
     if (newQuery !== query) {
       setQuery(newQuery);
       setPage(1);
@@ -56,7 +58,7 @@ export default function App() {
 
   return (
     <>
-      <SearchBar action={handleSearch} />
+      <SearchBar onSubmit={handleSearch} />
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
       {!isLoading && !isError && movies.length > 0 && (
