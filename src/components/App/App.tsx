@@ -11,9 +11,15 @@ import ErrorMessage from "../ErrorMessage/ErrorMessage";
 
 import { fetchMovies } from "../../services/movieService";
 import type { Movie } from "../../types/movie";
-import type { MoviesResponse } from "../../types/movies-response";
 
 import css from "./App.module.css";
+
+interface MoviesResponse {
+  page: number;
+  results: Movie[];
+  total_pages: number;
+  total_results: number;
+}
 
 export default function App() {
   const [query, setQuery] = useState("");
@@ -23,43 +29,37 @@ export default function App() {
   const { data, isLoading, isError } = useQuery<MoviesResponse, Error>({
     queryKey: ["movies", query, page],
     queryFn: () => fetchMovies(query, page),
-    enabled: query.length > 0,
+    enabled: !!query,
     staleTime: 5000,
+    placeholderData: (prev) => prev,
   });
 
   const movies = data?.results ?? [];
   const totalPages = data?.total_pages ?? 0;
 
   useEffect(() => {
-    if (data && !isLoading && !isError && movies.length === 0 && query) {
+    if (data && !isLoading && !isError && movies.length === 0) {
       toast.error("No movies found for your request.");
     }
-  }, [data, isLoading, isError, movies.length, query]);
+  }, [data, isLoading, isError, movies.length]);
 
-  const handleSearch = (newQuery: string) => {
-    if (newQuery !== query) {
-      setQuery(newQuery);
-      setPage(1);
-    }
+  const handleSearch = async (formData: FormData) => {
+    const queryValue = formData.get("query")?.toString().trim() ?? "";
+
+    setQuery(queryValue);
+    setPage(1);
   };
 
   const handlePageChange = ({ selected }: { selected: number }) => {
     setPage(selected + 1);
   };
 
-  const handleSelectMovie = (movie: Movie) => {
-    setSelectedMovie(movie);
-  };
-
-  const handleCloseModal = () => {
-    setSelectedMovie(null);
-  };
-
   return (
     <>
-      <SearchBar onSubmit={handleSearch} />
+      <SearchBar action={handleSearch} />
       {isLoading && <Loader />}
       {isError && <ErrorMessage />}
+
       {!isLoading && !isError && movies.length > 0 && (
         <>
           {totalPages > 1 && (
@@ -75,11 +75,15 @@ export default function App() {
               previousLabel="←"
             />
           )}
-          <MovieGrid movies={movies} onSelect={handleSelectMovie} />
+          <MovieGrid movies={movies} onSelect={setSelectedMovie} />
         </>
       )}
+
       {selectedMovie && (
-        <MovieModal movie={selectedMovie} onClose={handleCloseModal} />
+        <MovieModal
+          movie={selectedMovie}
+          onClose={() => setSelectedMovie(null)}
+        />
       )}
     </>
   );
